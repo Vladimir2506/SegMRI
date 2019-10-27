@@ -1,0 +1,13 @@
+# Folders
+dataset
+experiments
+__pycache__
+.vscode
+.DS_STORE
+
+# Extensions
+*.pyc
+*.nii
+*.cmd
+
+# Specified files

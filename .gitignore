@@ -4,10 +4,10 @@ experiments
 __pycache__
 .vscode
 .DS_STORE
+testdata
 
 # Extensions
 *.pyc
 *.nii
-*.cmd
 
 # Specified files

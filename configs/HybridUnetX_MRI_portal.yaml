@@ -1,0 +1,60 @@
+data:
+  name: MRI
+  kwargs:
+    record_path: /mnt/data1/MRIRecHybrid/portal
+    batch_size: 8
+    shuffle_buffer: 1000
+    augmentation:
+      name: Hybrid
+      kwargs:
+        crop_ratio: 0.5
+        zoom_ratio: 0.5
+        rotate_ratio: 0.0
+        zoom_delta: 0.2
+        crop_padding: 16
+        rotate_angle: 15
+        flip_h_ratio: 0.5
+        flip_w_ratio: 0.5
+
+model:
+  name: HybridUnetX
+  input_shape: [320, 256, 3, 1]
+  kwargs:
+    num_classes: 2
+    basic_channels: 16
+    weight_decay: 5.0e-4
+    k_depth: 3
+    blocks: 3
+
+solver:
+  hybrid: True
+  export_results: True
+  max_steps: 40000
+  save_steps: 500
+  resume_steps: 0
+  test_steps: 40000
+  log_steps: 50
+  exp_root: experiments/hybrid_mri_portal
+  lr: 1.0e-5
+  # loss:
+  #   name: LRDEHL
+  #   kwargs:
+  #     neg_rate: 0.5
+  #     hard_rate: 0.8
+  #     min_neg_num: 1000
+  #     loss_order: 2
+  loss:
+    name: Balanced
+    kwargs:
+      bce_weight: 0
+  optimizer:
+    name: Adam
+    kwargs:
+      beta_1: 0.9
+      beta_2: 0.99
+  lr_scheduler:
+    name: Exponential
+    kwargs:
+      decay_steps: 5000
+      decay_rate: 0.5
+      staircase: True

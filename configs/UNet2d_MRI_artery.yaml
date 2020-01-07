@@ -1,0 +1,47 @@
+data:
+  name: MRI2d
+  kwargs:
+    record_path: /mnt/data1/MRIRec2d/artery
+    batch_size: 16
+    shuffle_buffer: 1000
+
+model:
+  name: unet2d
+  input_shape: [320, 256, 1]
+  kwargs:
+    num_classes: 2
+    basic_channels: 32
+    weight_decay: 5.0e-4
+    dropout_rate: 0.0
+
+solver:
+  export_results: True
+  max_steps: 40000
+  save_steps: 500
+  resume_steps: 10000
+  test_steps: 40000
+  log_steps: 50
+  exp_root: experiments/unet2d_mri_artery
+  lr: 1.0e-3
+  loss:
+    name: LRDEHL
+    kwargs:
+      neg_rate: 0.5
+      hard_rate: 0.8
+      min_neg_num: 1000
+      loss_order: 2
+  # loss:
+  #   name: Balanced
+  #   kwargs:
+  #   bce_weight: 0
+  optimizer:
+    name: Adam
+    kwargs:
+      beta_1: 0.9
+      beta_2: 0.99
+  lr_scheduler:
+    name: Exponential
+    kwargs:
+      decay_steps: 5000
+      decay_rate: 0.5
+      staircase: True

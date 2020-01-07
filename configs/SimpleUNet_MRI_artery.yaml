@@ -1,0 +1,58 @@
+data:
+  name: MRI
+  kwargs:
+    record_path: /mnt/data1/MRIRec/artery
+    batch_size: 8
+    shuffle_buffer: 1000
+    augmentation:
+      name: 3D
+      kwargs:
+        crop_ratio: 0.5
+        zoom_ratio: 0.5
+        rotate_ratio: 0.5 
+        zoom_delta: 0.2
+        crop_padding: 8
+        rotate_angle: 30
+        flip_d_ratio: 0.5
+        flip_h_ratio: 0.5
+        flip_w_ratio: 0.5
+
+model:
+  name: SimpleUNet
+  input_shape: [64, 64, 64, 1]
+  kwargs:
+    num_classes: 2
+    basic_channels: 32
+    weight_decay: 5.0e-4
+
+solver:
+  export_results: True
+  hybrid: False
+  loss:
+    name: Balanced
+    # name: LRDEHL
+    kwargs:
+      bce_weight: 0
+    # kwargs:
+    #   neg_rate: 0.5
+    #   hard_rate: 0.5
+    #   loss_order: 1
+    #   min_neg_num: 500
+  max_steps: 40000
+  save_steps: 1000
+  resume_steps: 0
+  test_steps: 40000
+  log_steps: 100
+  exp_root: experiments/simpleunet_mri_artery
+  lr: 1.0e-3
+  optimizer:
+    name: Adam
+    kwargs:
+      beta_1: 0.9
+      beta_2: 0.99
+  lr_scheduler:
+    name: Exponential
+    kwargs:
+      decay_steps: 5000
+      decay_rate: 0.5
+      staircase: True
